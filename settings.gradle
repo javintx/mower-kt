@@ -1,0 +1,4 @@
+rootProject.name = 'mower-kt'
+include 'core'
+include 'app'
+
