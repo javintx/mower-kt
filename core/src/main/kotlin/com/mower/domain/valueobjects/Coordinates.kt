@@ -1,32 +1,31 @@
 package com.mower.domain.valueobjects
 
 import com.mower.domain.CardinalPoint
+import com.mower.domain.CardinalPoint.EAST
 import com.mower.domain.CardinalPoint.NORTH
+import com.mower.domain.CardinalPoint.SOUTH
+import com.mower.domain.CardinalPoint.WEST
 import com.mower.domain.exception.CoordinatesAreOutside
 import com.mower.domain.exception.CoordinatesMustBePositiveNumbers
-import java.util.Map
 import java.util.Objects
 import java.util.function.Consumer
-import kotlin.coroutines.coroutineContext
 
 class Coordinates(private var coordinateX: Int, private var coordinateY: Int) {
-    // val map = mapOf(1 to "x", 2 to "y", -1 to "zz")
-
-    private val MOVEMENTS = Map.of(
-        NORTH, Consumer { obj: Coordinates -> obj.upward() },
-        CardinalPoint.EAST, Consumer { obj: Coordinates -> obj.forward() },
-        CardinalPoint.SOUTH, Consumer { obj: Coordinates -> obj.downward() },
-        CardinalPoint.WEST, Consumer { obj: Coordinates -> obj.backward() }
+    private val movements = mapOf(
+        NORTH to Consumer { obj: Coordinates -> obj.upward() },
+        EAST to Consumer { obj: Coordinates -> obj.forward() },
+        SOUTH to Consumer { obj: Coordinates -> obj.downward() },
+        WEST to Consumer { obj: Coordinates -> obj.backward() }
     )
 
-    private val MINIMUM_COORDINATE_VALUE = 0
+    private val minimumCoordinateValue = 0
 
     init {
         validatePositiveCoordinates(coordinateX, coordinateY)
     }
 
-    fun moveTowards(cardinalPoint: CardinalPoint?) {
-        MOVEMENTS[cardinalPoint]?.accept(this)
+    fun moveTowards(cardinalPoint: CardinalPoint) {
+        movements[cardinalPoint]?.accept(this)
     }
 
     fun verifyAreInside(bottomLeftCoordinates: Coordinates, upperRightCoordinates: Coordinates) {
@@ -55,7 +54,7 @@ class Coordinates(private var coordinateX: Int, private var coordinateY: Int) {
     }
 
     private fun validatePositiveCoordinates(initialCoordinateX: Int, initialCoordinateY: Int) {
-        if (initialCoordinateX < MINIMUM_COORDINATE_VALUE || initialCoordinateY < MINIMUM_COORDINATE_VALUE) {
+        if (initialCoordinateX < minimumCoordinateValue || initialCoordinateY < minimumCoordinateValue) {
             throw CoordinatesMustBePositiveNumbers(initialCoordinateX, initialCoordinateY)
         }
     }

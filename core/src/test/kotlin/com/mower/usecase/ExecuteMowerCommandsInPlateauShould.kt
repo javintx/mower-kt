@@ -1,6 +1,9 @@
 package com.mower.usecase
 
 import com.mower.domain.Command
+import com.mower.domain.Command.LEFT
+import com.mower.domain.Command.MOVE
+import com.mower.domain.Command.RIGHT
 import com.mower.domain.Mower
 import com.mower.domain.Plateau
 import com.mower.domain.exception.CoordinatesAreOccupied
@@ -10,12 +13,11 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.junit.jupiter.api.function.Executable
 import org.mockito.ArgumentMatchers
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.doThrow
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.`when`
 import org.mockito.internal.verification.Times
 import org.mockito.junit.jupiter.MockitoExtension
 
@@ -66,15 +68,14 @@ class ExecuteMowerCommandsInPlateauShould {
             )
         )
         Assertions.assertThrows(
-            CoordinatesAreOutside::class.java,
-            Executable {
-                executeMowerCommandsInPlateau!!.executeWith(
-                    plateauMocked,
-                    mowerMocked,
-                    commands()
-                )
-            }
-        )
+            CoordinatesAreOutside::class.java
+        ) {
+            executeMowerCommandsInPlateau!!.executeWith(
+                plateauMocked,
+                mowerMocked,
+                commands()
+            )
+        }
         verify(mowerMocked, Times(1)).executeCommand(ArgumentMatchers.any(Command::class.java))
         verify(mowerMocked, Times(1)).coordinates()
         verify(plateauMocked, Times(0)).occupyCoordinate(ArgumentMatchers.any(Coordinates::class.java))
@@ -89,22 +90,21 @@ class ExecuteMowerCommandsInPlateauShould {
             )
         )
         Assertions.assertThrows(
-            CoordinatesAreOccupied::class.java,
-            Executable {
-                executeMowerCommandsInPlateau!!.executeWith(
-                    plateauMocked,
-                    mowerMocked,
-                    commands()
-                )
-            }
-        )
+            CoordinatesAreOccupied::class.java
+        ) {
+            executeMowerCommandsInPlateau!!.executeWith(
+                plateauMocked,
+                mowerMocked,
+                commands()
+            )
+        }
         verify(mowerMocked, Times(1)).executeCommand(ArgumentMatchers.any(Command::class.java))
         verify(mowerMocked, Times(1)).coordinates()
         verify(plateauMocked, Times(0)).occupyCoordinate(ArgumentMatchers.any(Coordinates::class.java))
     }
 
     private fun commands(): List<Command> {
-        return listOf(Command.LEFT, Command.RIGHT, Command.MOVE)
+        return listOf(LEFT, RIGHT, MOVE)
     }
 
     private fun emptyCommands(): List<Command> {
