@@ -5,6 +5,7 @@ import com.mower.domain.valueobjects.FaceTo
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
+import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import kotlin.test.assertEquals
 
@@ -26,28 +27,28 @@ class MowerShould {
 
     @Test
     fun executeCommand() {
-        Mockito.doNothing().`when`(commandMocked).execute(ArgumentMatchers.any(Mower::class.java))
+        doNothing().`when`(commandMocked).execute(ArgumentMatchers.any(Mower::class.java))
         anyMower().executeCommand(commandMocked)
         Mockito.verify(commandMocked).execute(ArgumentMatchers.any(Mower::class.java))
     }
 
     @Test
     fun spinLeft() {
-        Mockito.doNothing().`when`(faceToMocked).spinLeft()
+        doNothing().`when`(faceToMocked).spinLeft()
         anyMowerWithFaceToMocked().spinLeft()
         Mockito.verify(faceToMocked).spinLeft()
     }
 
     @Test
     fun spinRight() {
-        Mockito.doNothing().`when`(faceToMocked).spinRight()
+        doNothing().`when`(faceToMocked).spinRight()
         anyMowerWithFaceToMocked().spinRight()
         Mockito.verify(faceToMocked).spinRight()
     }
 
     @Test
     fun moveForward() {
-        Mockito.doNothing().`when`(coordinatesMocked).moveTowards(
+        doNothing().`when`(coordinatesMocked).moveTowards(
             ArgumentMatchers.any(
                 CardinalPoint::class.java
             )

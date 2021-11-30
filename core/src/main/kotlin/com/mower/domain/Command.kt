@@ -1,7 +1,6 @@
 package com.mower.domain
 
 import com.mower.domain.exception.UnknownCommandCode
-import java.util.Arrays
 import java.util.function.Consumer
 
 enum class Command(private val code: String, private val action: Consumer<Mower>) {
@@ -10,13 +9,9 @@ enum class Command(private val code: String, private val action: Consumer<Mower>
     MOVE("M", Consumer { obj: Mower -> obj.moveForward() });
 
     companion object {
-        fun fromCode(commandCode: String): Command {
-            return Arrays.stream(values())
-                .filter { command: Command ->
-                    command.code == commandCode
-                }
-                .findAny()
-                .orElseThrow { UnknownCommandCode(commandCode) }
+        private val commandCodes = values().associateBy(Command::code)
+        fun fromCode(code: String): Command {
+            return commandCodes[code] ?: throw UnknownCommandCode(code)
         }
     }
 

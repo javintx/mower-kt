@@ -111,11 +111,6 @@ class CoordinateShould {
     }
 
     @Test
-    fun ensureOtherClassIsNotEqualsToCoordinates() {
-        assertNotEquals(any(), coordinates())
-    }
-
-    @Test
     fun ensureTwoCoordinatesWithDifferentCoordinateXAreNotEquals() {
         assertNotEquals(coordinatesAboveByWidth(), coordinates())
     }

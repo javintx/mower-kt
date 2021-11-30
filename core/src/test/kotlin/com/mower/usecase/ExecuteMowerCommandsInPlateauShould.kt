@@ -9,17 +9,17 @@ import com.mower.domain.Plateau
 import com.mower.domain.exception.CoordinatesAreOccupied
 import com.mower.domain.exception.CoordinatesAreOutside
 import com.mower.domain.valueobjects.Coordinates
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.doThrow
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 import org.mockito.internal.verification.Times
 import org.mockito.junit.jupiter.MockitoExtension
+import kotlin.test.assertFailsWith
 
 @ExtendWith(MockitoExtension::class)
 class ExecuteMowerCommandsInPlateauShould {
@@ -28,7 +28,7 @@ class ExecuteMowerCommandsInPlateauShould {
     private val mowerMocked: Mower = mock(Mower::class.java)
     private val coordinatesMocked: Coordinates = mock(Coordinates::class.java)
 
-    private var executeMowerCommandsInPlateau: ExecuteMowerCommandsInPlateau? = null
+    private lateinit var executeMowerCommandsInPlateau: ExecuteMowerCommandsInPlateau
 
     @BeforeEach
     fun setUp() {
@@ -38,7 +38,7 @@ class ExecuteMowerCommandsInPlateauShould {
     @Test
     fun executeWithoutCommands() {
         `when`(mowerMocked.coordinates()).thenReturn(coordinatesMocked)
-        executeMowerCommandsInPlateau!!.executeWith(plateauMocked, mowerMocked, emptyCommands())
+        executeMowerCommandsInPlateau.executeWith(plateauMocked, mowerMocked, emptyCommands())
         verify(
             plateauMocked,
             Times(emptyCommands().size)
@@ -50,7 +50,7 @@ class ExecuteMowerCommandsInPlateauShould {
     @Test
     fun executeWithCommands() {
         `when`(mowerMocked.coordinates()).thenReturn(coordinatesMocked)
-        executeMowerCommandsInPlateau!!.executeWith(plateauMocked, mowerMocked, commands())
+        executeMowerCommandsInPlateau.executeWith(plateauMocked, mowerMocked, commands())
         verify(
             plateauMocked,
             Times(commands().size)
@@ -62,15 +62,18 @@ class ExecuteMowerCommandsInPlateauShould {
     @Test
     fun executeWithThrowCoordinatesAreOutsidePlateau() {
         `when`(mowerMocked.coordinates()).thenReturn(coordinatesMocked)
-        doThrow(CoordinatesAreOutside::class.java).`when`(plateauMocked).verifyCoordinates(
-            ArgumentMatchers.any(
-                Coordinates::class.java
-            )
-        )
-        Assertions.assertThrows(
+
+        `when`(plateauMocked.verifyCoordinates(ArgumentMatchers.any(Coordinates::class.java))).thenThrow(
             CoordinatesAreOutside::class.java
-        ) {
-            executeMowerCommandsInPlateau!!.executeWith(
+        )
+
+//        doThrow(CoordinatesAreOutside::class.java).`when`(plateauMocked).verifyCoordinates(
+//            ArgumentMatchers.any(
+//                Coordinates::class.java
+//            )
+//        )
+        assertFailsWith<CoordinatesAreOutside> {
+            executeMowerCommandsInPlateau.executeWith(
                 plateauMocked,
                 mowerMocked,
                 commands()
@@ -89,15 +92,14 @@ class ExecuteMowerCommandsInPlateauShould {
                 Coordinates::class.java
             )
         )
-        Assertions.assertThrows(
-            CoordinatesAreOccupied::class.java
-        ) {
-            executeMowerCommandsInPlateau!!.executeWith(
+        assertFailsWith<CoordinatesAreOccupied> {
+            executeMowerCommandsInPlateau.executeWith(
                 plateauMocked,
                 mowerMocked,
                 commands()
             )
         }
+
         verify(mowerMocked, Times(1)).executeCommand(ArgumentMatchers.any(Command::class.java))
         verify(mowerMocked, Times(1)).coordinates()
         verify(plateauMocked, Times(0)).occupyCoordinate(ArgumentMatchers.any(Coordinates::class.java))

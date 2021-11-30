@@ -1,5 +1,5 @@
 plugins {
-    id "java-library"
+    //id "java-library"
     id "org.jetbrains.kotlin.jvm" version "1.6.0"
 }
 
@@ -32,7 +32,6 @@ subprojects {
         mavenCentral()
     }
 
-    apply plugin: "java"
     apply plugin: "kotlin"
 
     java {
@@ -42,7 +41,6 @@ subprojects {
     }
 
     dependencies {
-        testImplementation "org.assertj:assertj-core:3.19.0"
         testImplementation "org.mockito:mockito-junit-jupiter:3.9.0"
         testImplementation "org.junit.jupiter:junit-jupiter-params:5.7.0"
         testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.7.0"
