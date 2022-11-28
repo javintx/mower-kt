@@ -1,13 +1,10 @@
 package com.mower.domain.valueobjects
 
 import com.mower.domain.CardinalPoint
-import com.mower.domain.CardinalPoint.EAST
-import com.mower.domain.CardinalPoint.NORTH
-import com.mower.domain.CardinalPoint.SOUTH
-import com.mower.domain.CardinalPoint.WEST
+import com.mower.domain.CardinalPoint.*
 import com.mower.domain.exception.CoordinatesAreOutside
 import com.mower.domain.exception.CoordinatesMustBePositiveNumbers
-import java.util.Objects
+import java.util.*
 import java.util.function.Consumer
 
 class Coordinates(private var coordinateX: Int, private var coordinateY: Int) {
@@ -29,10 +26,8 @@ class Coordinates(private var coordinateX: Int, private var coordinateY: Int) {
     }
 
     fun verifyAreInside(bottomLeftCoordinates: Coordinates, upperRightCoordinates: Coordinates) {
-        if (bottomLeftCoordinates.coordinateX > coordinateX ||
-            bottomLeftCoordinates.coordinateY > coordinateY ||
-            upperRightCoordinates.coordinateX < coordinateX ||
-            upperRightCoordinates.coordinateY < coordinateY
+        if (coordinateX in bottomLeftCoordinates.coordinateX..upperRightCoordinates.coordinateX ||
+            coordinateY in bottomLeftCoordinates.coordinateY..upperRightCoordinates.coordinateY
         ) {
             throw CoordinatesAreOutside(coordinateX, coordinateY)
         }

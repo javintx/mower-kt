@@ -26,6 +26,6 @@ class Mower(private val coordinates: Coordinates, private val faceTo: FaceTo) {
     }
 
     fun situation(): String {
-        return coordinates.situation() + " " + faceTo.situation()
+        return "${coordinates.situation()} ${faceTo.situation()}"
     }
 }

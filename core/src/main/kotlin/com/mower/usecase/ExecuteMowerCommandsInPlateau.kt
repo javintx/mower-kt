@@ -6,8 +6,8 @@ import com.mower.domain.Plateau
 
 class ExecuteMowerCommandsInPlateau {
     fun executeWith(plateau: Plateau, mower: Mower, commands: List<Command>) {
-        for (command in commands) {
-            mower.executeCommand(command)
+        commands.forEach {
+            mower.executeCommand(it)
             plateau.verifyCoordinates(mower.coordinates())
         }
         plateau.occupyCoordinate(mower.coordinates())

@@ -2,7 +2,6 @@ package com.mower.domain
 
 import com.mower.domain.exception.CoordinatesAreOccupied
 import com.mower.domain.valueobjects.Coordinates
-import java.util.ArrayList
 
 class Plateau(private val upperRightCoordinates: Coordinates) {
     val ZERO_COORDINATE = 0

@@ -6,9 +6,7 @@ import com.mower.domain.Mower
 import com.mower.domain.Plateau
 import com.mower.domain.valueobjects.Coordinates
 import com.mower.domain.valueobjects.FaceTo
-import java.util.Arrays
-import java.util.Scanner
-import java.util.stream.Collectors
+import java.util.*
 
 class CommandConsole(private val scanner: Scanner) {
 
@@ -53,7 +51,7 @@ class CommandConsole(private val scanner: Scanner) {
     }
 
     fun printSituationOf(mower: Mower) {
-        printMessage(String.format("Mower situation: %s%n", mower.situation()))
+        printMessage("Mower situation: ${mower.situation()}")
     }
 
     fun printErrorMessage(error: String?) {
@@ -106,14 +104,12 @@ class CommandConsole(private val scanner: Scanner) {
     }
 
     private fun processCommandsWith(mowerCommands: String): List<Command> {
-        return Arrays
-            .stream(mowerCommands.split(COMMANDS_SEPARATOR_REGEX).filter { it.isNotBlank() }.toTypedArray())
-            .map { commandCode: String ->
-                Command.fromCode(
-                    commandCode
-                )
-            }
-            .collect(Collectors.toList())
+        return mowerCommands
+            .split(COMMANDS_SEPARATOR_REGEX)
+            .filter { it.isNotBlank() }
+            .toTypedArray()
+            .map { Command.fromCode(it) }
+            .toList()
     }
 
     private fun processIsFinishedWith(isFinished: String): Boolean {
